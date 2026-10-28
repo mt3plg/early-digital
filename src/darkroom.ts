@@ -1,5 +1,5 @@
 import { Skia } from '@shopify/react-native-skia';
-import { Asset, requestPermissionsAsync } from 'expo-media-library';
+import { Asset, getPermissionsAsync, requestPermissionsAsync } from 'expo-media-library';
 import { useSyncExternalStore } from 'react';
 import { develop, type DevelopStage } from './pipeline/develop';
 import type { SkiaApi } from './pipeline/skia';
@@ -61,6 +61,7 @@ export function enqueueDevelop(req: DevelopRequest): Promise<Shot> {
 
   const run = async (): Promise<Shot> => {
     try {
+      const t0 = Date.now();
       const res = await develop(Skia as SkiaApi, req.source, {
         profile,
         front: req.front,
@@ -83,11 +84,14 @@ export function enqueueDevelop(req: DevelopRequest): Promise<Shot> {
         scene: res.scene,
         origin: req.origin,
       };
+      if (__DEV__) {
+        console.log(`[darkroom] ${fileName} ${res.width}x${res.height} ${profile.id} in ${Date.now() - t0} ms`);
+      }
       saveShot(shot, res.jpeg, req.source);
       notifyShotsChanged();
       patchJob(job.id, { stage: 'done', shotId: shot.id });
       if (loadSettings().autoSave) {
-        saveToLibrary(shot).catch((e) => console.warn('Auto-save failed', e));
+        autoSave(shot);
       }
       return shot;
     } catch (e) {
@@ -115,4 +119,15 @@ export async function saveToLibrary(shot: Shot): Promise<void> {
   await Asset.create(shotFiles(shot).developed.uri);
   updateShot({ ...shot, savedToLibrary: true });
   notifyShotsChanged();
+}
+
+/** Saves silently; once the user has refused library access for good, stops asking. */
+async function autoSave(shot: Shot): Promise<void> {
+  try {
+    const perm = await getPermissionsAsync(true, ['photo']);
+    if (!perm.granted && !perm.canAskAgain) return;
+    await saveToLibrary(shot);
+  } catch (e) {
+    console.warn('Auto-save failed', e);
+  }
 }

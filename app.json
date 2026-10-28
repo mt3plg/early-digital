@@ -14,7 +14,8 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Early Digital uses the camera to take photos and develop them like a 2002-2013 phone would.",
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "appleTeamId": "9SK4793MYF"
     },
     "android": {
       "package": "com.earlydigital.camera",
