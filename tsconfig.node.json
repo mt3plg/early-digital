@@ -1,0 +1,9 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": ["lab", "test", "src/pipeline", "src/exif", "src/profiles"]
+}

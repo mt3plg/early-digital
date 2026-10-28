@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "Early Digital",
+    "slug": "early-digital",
+    "scheme": "earlydigital",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0B0B0C",
+    "ios": {
+      "bundleIdentifier": "com.earlydigital.camera",
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Early Digital uses the camera to take photos and develop them like a 2002-2013 phone would.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.earlydigital.camera",
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#0B0B0C",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sharing",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Early Digital opens photos you pick so it can re-develop them.",
+          "savePhotosPermission": "Early Digital saves developed photos to your library.",
+          "granularPermissions": [
+            "photo"
+          ]
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Early Digital opens photos you pick so it can re-develop them.",
+          "cameraPermission": "Early Digital uses the camera to take photos and develop them like a 2002-2013 phone would.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "17.0"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
